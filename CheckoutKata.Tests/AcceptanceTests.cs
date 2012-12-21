@@ -20,6 +20,7 @@ namespace CheckoutKata.Tests
         }
 
         [TestCase("A", 50)]
+        [TestCase("B", 30)]
         public void GivenOneItemShouldReturnItsPrice(object item, int price)
         {
             _checkout.Add(item);
@@ -33,6 +34,8 @@ namespace CheckoutKata.Tests
         public void Add(object item)
         {
             if (item.Equals("A")) Price = 50;
+
+            if (item.Equals("B")) Price = 30;
         }
 
         public int Price { get; set; }
