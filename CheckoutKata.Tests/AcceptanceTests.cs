@@ -89,10 +89,10 @@ namespace CheckoutKata.Tests
 
     public class Checkout
     {
-        private readonly IDictionary<object, int> _prices;
+        private readonly IReadOnlyDictionary<object, int> _prices;
         private readonly IDictionary<object, int> _itemCount;
 
-        public Checkout(IDictionary<object, int> prices)
+        public Checkout(IReadOnlyDictionary<object, int> prices)
         {
             _prices = prices;
             _itemCount = new Dictionary<object, int>();
