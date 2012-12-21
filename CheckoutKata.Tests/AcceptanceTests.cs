@@ -188,12 +188,6 @@ namespace CheckoutKata.Tests
             _discounter.Register(item);
         }
 
-        public int Total { get { return _priceTotalizer.Total - DiscountTotal; } }
-
-        protected int DiscountTotal
-        {
-            set { _discounter.Discount = value; }
-            get { return _discounter.Discount; }
-        }
+        public int Total { get { return _priceTotalizer.Total - _discounter.Discount; } }
     }
 }
