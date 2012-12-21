@@ -19,7 +19,19 @@ namespace CheckoutKata.Tests
                                                          {'C', 20},
                                                          {'D', 15},
                                                      };
-            _checkout = new Checkout(prices);
+            var discounts = new Dictionary<object, int>
+                                {
+                                    {'A', 20},
+                                    {'B', 15}
+                                };
+
+            var discountQuantities = new Dictionary<object, int>
+                                         {
+                                             {'A', 3},
+                                             {'B', 2}
+                                         };
+
+            _checkout = new Checkout(prices, discounts, discountQuantities);
         }
 
         [Test]
@@ -91,11 +103,15 @@ namespace CheckoutKata.Tests
     {
         private readonly IReadOnlyDictionary<object, int> _prices;
         private readonly IDictionary<object, int> _itemCount;
+        private readonly IReadOnlyDictionary<object, int> _discountQuantity;
+        private readonly IReadOnlyDictionary<object, int> _discountAmount;
 
-        public Checkout(IReadOnlyDictionary<object, int> prices)
+        public Checkout(IReadOnlyDictionary<object, int> prices, IReadOnlyDictionary<object, int> discountAmount, IReadOnlyDictionary<object, int> discountQuantity)
         {
             _prices = prices;
             _itemCount = new Dictionary<object, int>();
+            _discountQuantity = discountQuantity;
+            _discountAmount = discountAmount;
             Total = 0;
         }
 
@@ -103,7 +119,7 @@ namespace CheckoutKata.Tests
         {
             IncrementItemCount(item);
             ApplyPrice(item);
-            ApplyDiscounts();
+            ApplyDiscounts(item);
         }
 
         private void ApplyPrice(object item)
@@ -111,17 +127,13 @@ namespace CheckoutKata.Tests
             Total += _prices[item];
         }
 
-        private void ApplyDiscounts()
+        private void ApplyDiscounts(object item)
         {
-            if (_itemCount.ContainsKey('A') && _itemCount['A'] == 3)
+            if (!_discountQuantity.ContainsKey(item)) return;
+            
+            if (_itemCount[item] == _discountQuantity[item])
             {
-                Total -= 20;
-                _itemCount['A'] = 0;
-            }
-            if (_itemCount.ContainsKey('B') && _itemCount['B'] == 2)
-            {
-                Total -= 15;
-                _itemCount['B'] = 0;
+                Total -= _discountAmount[item];
             }
         }
 
