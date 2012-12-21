@@ -5,21 +5,26 @@ namespace CheckoutKata.Tests
     [TestFixture]
     public class AcceptanceTests
     {
+        private Checkout _checkout;
+
+        [SetUp]
+        public void Setup()
+        {
+            _checkout = new Checkout();
+        }
+
         [Test]
         public void GivenNoItemsPriceSHouldBeZero()
         {
-            var checkout = 0;
-
-            Assert.That(checkout, Is.EqualTo(0));
+            Assert.That(_checkout.Price, Is.EqualTo(0));
         }
 
         [TestCase("A", 50)]
         public void GivenOneItemShouldReturnItsPrice(object item, int price)
         {
-            var checkout = new Checkout();
-            checkout.Add(item);
+            _checkout.Add(item);
 
-            Assert.That(checkout.Price, Is.EqualTo(price));
+            Assert.That(_checkout.Price, Is.EqualTo(price));
         }
     }
 
