@@ -103,14 +103,14 @@ namespace CheckoutKata.Tests
     {
         private readonly IReadOnlyDictionary<object, int> _prices;
         private readonly IDictionary<object, int> _itemCount;
-        private readonly IReadOnlyDictionary<object, int> _discountQuantity;
+        private readonly IReadOnlyDictionary<object, int> _itemQuantityForDiscount;
         private readonly IReadOnlyDictionary<object, int> _discountAmount;
 
-        public Checkout(IReadOnlyDictionary<object, int> prices, IReadOnlyDictionary<object, int> discountAmount, IReadOnlyDictionary<object, int> discountQuantity)
+        public Checkout(IReadOnlyDictionary<object, int> prices, IReadOnlyDictionary<object, int> discountAmount, IReadOnlyDictionary<object, int> itemQuantityForDiscount)
         {
             _prices = prices;
             _itemCount = new Dictionary<object, int>();
-            _discountQuantity = discountQuantity;
+            _itemQuantityForDiscount = itemQuantityForDiscount;
             _discountAmount = discountAmount;
             Total = 0;
         }
@@ -129,9 +129,9 @@ namespace CheckoutKata.Tests
 
         private void ApplyDiscounts(object item)
         {
-            if (!_discountQuantity.ContainsKey(item)) return;
+            if (!_itemQuantityForDiscount.ContainsKey(item)) return;
             
-            if (_itemCount[item] == _discountQuantity[item])
+            if (_itemCount[item] == _itemQuantityForDiscount[item])
             {
                 Total -= _discountAmount[item];
             }
