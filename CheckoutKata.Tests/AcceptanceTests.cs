@@ -90,12 +90,14 @@ namespace CheckoutKata.Tests
     public class Checkout
     {
         private readonly IDictionary<object, int> _prices;
+        private IDictionary<object, int> _itemCount; 
         private int _aCount;
         private int _bCount;
 
         public Checkout(IDictionary<object, int> prices)
         {
             _prices = prices;
+            _itemCount = new Dictionary<object, int>();
             Total = 0;
             _aCount = 0;
             _bCount = 0;
@@ -115,22 +117,27 @@ namespace CheckoutKata.Tests
 
         private void ApplyDiscounts()
         {
-            if (_aCount == 3)
+            if (_itemCount.ContainsKey('A') && _itemCount['A'] == 3)
             {
                 Total -= 20;
-                _aCount = 0;
+                _itemCount['A'] = 0;
             }
-            if (_bCount == 2)
+            if (_itemCount.ContainsKey('B') && _itemCount['B'] == 2)
             {
                 Total -= 15;
-                _bCount = 0;
+                _itemCount['B'] = 0;
             }
         }
 
         private void IncrementItemCount(object item)
         {
-            if (item.Equals('A')) _aCount += 1;
-            if (item.Equals('B')) _bCount += 1;
+            if (_itemCount.ContainsKey(item))
+            {
+                _itemCount[item] += 1;
+                return;
+            }
+
+            _itemCount.Add(item, 1);
         }
 
         public int Total { get; private set; }
