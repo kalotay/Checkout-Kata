@@ -4,6 +4,12 @@ namespace CheckoutKata
 {
     public class DictDiscounter : IDiscounter
     {
+        public struct DiscountSpec
+        {
+            public int ItemQuantity;
+            public int DiscountAmount;
+        }
+
         private readonly IDictionary<object, int> _itemCount;
         private readonly IReadOnlyDictionary<object, DiscountSpec> _discountSpecs; 
 

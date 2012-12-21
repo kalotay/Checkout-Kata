@@ -42,7 +42,6 @@
     <Compile Include="Checkout.cs" />
     <Compile Include="DictDiscounter.cs" />
     <Compile Include="DictPriceTotalizer.cs" />
-    <Compile Include="DiscountSpec.cs" />
     <Compile Include="IDiscounter.cs" />
     <Compile Include="IPriceTotalizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
