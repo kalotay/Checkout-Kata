@@ -1,17 +1,17 @@
 namespace CheckoutKata
 {
-    public class Checkout
+    public class Checkout<T>
     {
-        private readonly IPriceTotalizer _priceTotalizer;
-        private readonly IDiscounter _discounter;
+        private readonly IPriceTotalizer<T> _priceTotalizer;
+        private readonly IDiscounter<T> _discounter;
 
-        public Checkout(IPriceTotalizer priceTotalizer, IDiscounter discounter)
+        public Checkout(IPriceTotalizer<T> priceTotalizer, IDiscounter<T> discounter)
         {
             _priceTotalizer = priceTotalizer;
             _discounter = discounter;
         }
 
-        public void Scan(object item)
+        public void Scan(T item)
         {
             _priceTotalizer.Register(item);
             _discounter.Register(item);

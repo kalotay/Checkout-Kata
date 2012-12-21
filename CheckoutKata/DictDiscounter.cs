@@ -2,28 +2,28 @@ using System.Collections.Generic;
 
 namespace CheckoutKata
 {
-    public class DictDiscounter : IDiscounter
+    public class DictDiscounter<T> : IDiscounter<T>
     {
-        private readonly IDictionary<object, int> _itemCount;
-        private readonly IReadOnlyDictionary<object, int> _itemQuantityForDiscount;
-        private readonly IReadOnlyDictionary<object, int> _discountAmount;
+        private readonly IDictionary<T, int> _itemCount;
+        private readonly IReadOnlyDictionary<T, int> _itemQuantityForDiscount;
+        private readonly IReadOnlyDictionary<T, int> _discountAmount;
 
-        public DictDiscounter(IReadOnlyDictionary<object, int> itemQuantityForDiscount, IReadOnlyDictionary<object, int> discountAmount)
+        public DictDiscounter(IReadOnlyDictionary<T, int> itemQuantityForDiscount, IReadOnlyDictionary<T, int> discountAmount)
         {
-            _itemCount = new Dictionary<object, int>();
+            _itemCount = new Dictionary<T, int>();
             _itemQuantityForDiscount = itemQuantityForDiscount;
             _discountAmount = discountAmount;
         }
 
         public int Discount  { get; set; }
 
-        public void Register(object item)
+        public void Register(T item)
         {
             IncrementItemCount(item);
             ApplyDiscounts(item);
         }
 
-        private void ApplyDiscounts(object item)
+        private void ApplyDiscounts(T item)
         {
             if (!_itemQuantityForDiscount.ContainsKey(item)) return;
             
@@ -33,7 +33,7 @@ namespace CheckoutKata
             }
         }
 
-        private void IncrementItemCount(object item)
+        private void IncrementItemCount(T item)
         {
             if (_itemCount.ContainsKey(item))
             {

@@ -1,8 +1,8 @@
 namespace CheckoutKata
 {
-    public interface IPriceTotalizer
+    public interface IPriceTotalizer<in T>
     {
         int Total { get; }
-        void Register(object item);
+        void Register(T item);
     }
 }

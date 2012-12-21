@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace CheckoutKata.Tests
@@ -7,31 +6,31 @@ namespace CheckoutKata.Tests
     [TestFixture]
     public class AcceptanceTests
     {
-        private Checkout _checkout;
+        private Checkout<char> _checkout;
 
         [SetUp]
         public void Setup()
         {
-            var prices = new Dictionary<object, int>
+            var prices = new Dictionary<char, int>
                                                      {
                                                          {'A', 50},
                                                          {'B', 30},
                                                          {'C', 20},
                                                          {'D', 15},
                                                      };
-            var discounts = new Dictionary<object, int>
+            var discounts = new Dictionary<char, int>
                                 {
                                     {'A', 20},
                                     {'B', 15}
                                 };
 
-            var discountQuantities = new Dictionary<object, int>
+            var discountQuantities = new Dictionary<char, int>
                                          {
                                              {'A', 3},
                                              {'B', 2}
                                          };
 
-            _checkout = new Checkout(new DictPriceTotalizer(prices), new DictDiscounter(discountQuantities, discounts));
+            _checkout = new Checkout<char>(new DictPriceTotalizer<char>(prices), new DictDiscounter<char>(discountQuantities, discounts));
         }
 
         [Test]
@@ -44,7 +43,7 @@ namespace CheckoutKata.Tests
         [TestCase('B', 30)]
         [TestCase('C', 20)]
         [TestCase('D', 15)]
-        public void GivenOneItemShouldReturnItsPrice(object item, int price)
+        public void GivenOneItemShouldReturnItsPrice(char item, int price)
         {
             _checkout.Scan(item);
 
@@ -56,7 +55,7 @@ namespace CheckoutKata.Tests
         [TestCase("AD", 65)]
         [TestCase("ADA", 115)]
         [TestCase("CCCCC", 100)]
-        public void GivenNItemsWithoutDiscountReturnTheSumOfPrices(IEnumerable items, int price)
+        public void GivenNItemsWithoutDiscountReturnTheSumOfPrices(IEnumerable<char> items, int price)
         {
             foreach (var item in items)
             {
