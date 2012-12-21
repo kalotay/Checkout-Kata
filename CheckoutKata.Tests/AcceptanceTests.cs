@@ -31,7 +31,7 @@ namespace CheckoutKata.Tests
                                              {'B', 2}
                                          };
 
-            _checkout = new Checkout(new DictPriceTotalizer(prices), discounts, discountQuantities);
+            _checkout = new Checkout(new DictPriceTotalizer(prices), new DictDiscounter(discountQuantities, discounts));
         }
 
         [Test]
@@ -122,13 +122,19 @@ namespace CheckoutKata.Tests
         }
     }
 
-    public class Discounter
+    public interface IDiscounter
+    {
+        int Discount { get; set; }
+        void Register(object item);
+    }
+
+    public class DictDiscounter : IDiscounter
     {
         private readonly IDictionary<object, int> _itemCount;
         private readonly IReadOnlyDictionary<object, int> _itemQuantityForDiscount;
         private readonly IReadOnlyDictionary<object, int> _discountAmount;
 
-        public Discounter(IReadOnlyDictionary<object, int> itemQuantityForDiscount, IReadOnlyDictionary<object, int> discountAmount)
+        public DictDiscounter(IReadOnlyDictionary<object, int> itemQuantityForDiscount, IReadOnlyDictionary<object, int> discountAmount)
         {
             _itemCount = new Dictionary<object, int>();
             _itemQuantityForDiscount = itemQuantityForDiscount;
@@ -168,12 +174,12 @@ namespace CheckoutKata.Tests
     public class Checkout
     {
         private readonly IPriceTotalizer _priceTotalizer;
-        private readonly Discounter _discounter;
+        private readonly IDiscounter _discounter;
 
-        public Checkout(IPriceTotalizer priceTotalizer, IReadOnlyDictionary<object, int> discountAmount, IReadOnlyDictionary<object, int> itemQuantityForDiscount)
+        public Checkout(IPriceTotalizer priceTotalizer, IDiscounter discounter)
         {
             _priceTotalizer = priceTotalizer;
-            _discounter = new Discounter(itemQuantityForDiscount, discountAmount);
+            _discounter = discounter;
         }
 
         public void Scan(object item)
