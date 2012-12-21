@@ -31,7 +31,7 @@ namespace CheckoutKata.Tests
                                              {'B', 2}
                                          };
 
-            _checkout = new Checkout(prices, discounts, discountQuantities);
+            _checkout = new Checkout(new PriceTotalizer(prices), discounts, discountQuantities);
         }
 
         [Test]
@@ -99,16 +99,33 @@ namespace CheckoutKata.Tests
 
     }
 
-    public class Checkout
+    public class PriceTotalizer
     {
         private readonly IReadOnlyDictionary<object, int> _prices;
+
+        public PriceTotalizer(IReadOnlyDictionary<object, int> prices)
+        {
+            _prices = prices;
+        }
+
+        public int PriceTotal { get; set; }
+
+        public void ApplyPrice(object item)
+        {
+            PriceTotal += _prices[item];
+        }
+    }
+
+    public class Checkout
+    {
         private readonly IDictionary<object, int> _itemCount;
         private readonly IReadOnlyDictionary<object, int> _itemQuantityForDiscount;
         private readonly IReadOnlyDictionary<object, int> _discountAmount;
+        private readonly PriceTotalizer _priceTotalizer;
 
-        public Checkout(IReadOnlyDictionary<object, int> prices, IReadOnlyDictionary<object, int> discountAmount, IReadOnlyDictionary<object, int> itemQuantityForDiscount)
+        public Checkout(PriceTotalizer priceTotalizer, IReadOnlyDictionary<object, int> discountAmount, IReadOnlyDictionary<object, int> itemQuantityForDiscount)
         {
-            _prices = prices;
+            _priceTotalizer = priceTotalizer;
             _itemCount = new Dictionary<object, int>();
             _itemQuantityForDiscount = itemQuantityForDiscount;
             _discountAmount = discountAmount;
@@ -117,16 +134,9 @@ namespace CheckoutKata.Tests
         public void Scan(object item)
         {
             IncrementItemCount(item);
-            ApplyPrice(item);
+            _priceTotalizer.ApplyPrice(item);
             ApplyDiscounts(item);
         }
-
-        private void ApplyPrice(object item)
-        {
-            PriceTotal += _prices[item];
-        }
-
-        public int PriceTotal { get; private set; }
 
         private void ApplyDiscounts(object item)
         {
@@ -149,7 +159,7 @@ namespace CheckoutKata.Tests
             _itemCount.Add(item, 1);
         }
 
-        public int Total { get { return PriceTotal - DiscountTotal; } }
+        public int Total { get { return _priceTotalizer.PriceTotal - DiscountTotal; } }
 
         protected int DiscountTotal  { get; set; }
     }
