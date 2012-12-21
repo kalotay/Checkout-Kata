@@ -122,29 +122,22 @@ namespace CheckoutKata.Tests
         }
     }
 
-    public class Checkout
+    public class Discounter
     {
         private readonly IDictionary<object, int> _itemCount;
         private readonly IReadOnlyDictionary<object, int> _itemQuantityForDiscount;
         private readonly IReadOnlyDictionary<object, int> _discountAmount;
-        private readonly IPriceTotalizer _priceTotalizer;
 
-        public Checkout(IPriceTotalizer priceTotalizer, IReadOnlyDictionary<object, int> discountAmount, IReadOnlyDictionary<object, int> itemQuantityForDiscount)
+        public Discounter(IReadOnlyDictionary<object, int> itemQuantityForDiscount, IReadOnlyDictionary<object, int> discountAmount)
         {
-            _priceTotalizer = priceTotalizer;
             _itemCount = new Dictionary<object, int>();
             _itemQuantityForDiscount = itemQuantityForDiscount;
             _discountAmount = discountAmount;
         }
 
-        public void Scan(object item)
-        {
-            IncrementItemCount(item);
-            _priceTotalizer.Register(item);
-            ApplyDiscounts(item);
-        }
+        public int DiscountTotal  { get; set; }
 
-        private void ApplyDiscounts(object item)
+        public void ApplyDiscounts(object item)
         {
             if (!_itemQuantityForDiscount.ContainsKey(item)) return;
             
@@ -154,7 +147,7 @@ namespace CheckoutKata.Tests
             }
         }
 
-        private void IncrementItemCount(object item)
+        public void IncrementItemCount(object item)
         {
             if (_itemCount.ContainsKey(item))
             {
@@ -164,9 +157,32 @@ namespace CheckoutKata.Tests
 
             _itemCount.Add(item, 1);
         }
+    }
+
+    public class Checkout
+    {
+        private readonly IPriceTotalizer _priceTotalizer;
+        private readonly Discounter _discounter;
+
+        public Checkout(IPriceTotalizer priceTotalizer, IReadOnlyDictionary<object, int> discountAmount, IReadOnlyDictionary<object, int> itemQuantityForDiscount)
+        {
+            _priceTotalizer = priceTotalizer;
+            _discounter = new Discounter(itemQuantityForDiscount, discountAmount);
+        }
+
+        public void Scan(object item)
+        {
+            _discounter.IncrementItemCount(item);
+            _priceTotalizer.Register(item);
+            _discounter.ApplyDiscounts(item);
+        }
 
         public int Total { get { return _priceTotalizer.Total - DiscountTotal; } }
 
-        protected int DiscountTotal  { get; set; }
+        protected int DiscountTotal
+        {
+            set { _discounter.DiscountTotal = value; }
+            get { return _discounter.DiscountTotal; }
+        }
     }
 }
