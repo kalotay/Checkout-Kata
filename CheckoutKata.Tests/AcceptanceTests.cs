@@ -55,7 +55,7 @@ namespace CheckoutKata.Tests
         }
 
         [Test]
-        public void AppliesDiscount()
+        public void AppliesDiscountForA()
         {
             _checkout.Scan('A');
             _checkout.Scan('A');
@@ -63,25 +63,39 @@ namespace CheckoutKata.Tests
 
             Assert.That(_checkout.Total, Is.EqualTo(130));
         }
+
+        [Test]
+        public void AppliesDiscountForB()
+        {
+            _checkout.Scan('B');
+            _checkout.Scan('B');
+
+            Assert.That(_checkout.Total, Is.EqualTo(45));
+        }
+
     }
 
     public class Checkout
     {
         private readonly IDictionary<object, int> _prices;
         private int _aCount;
+        private int _bCount;
 
         public Checkout(IDictionary<object, int> prices)
         {
             _prices = prices;
             Total = 0;
             _aCount = 0;
+            _bCount = 0;
         }
 
         public void Scan(object item)
         {
             if (item.Equals('A')) _aCount += 1;
+            if (item.Equals('B')) _bCount += 1;
             Total += _prices[item];
             if (_aCount == 3) Total -= 20;
+            if (_bCount == 2) Total -= 15;
         }
 
         public int Total { get; private set; }
