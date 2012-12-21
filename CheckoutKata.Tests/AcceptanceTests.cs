@@ -58,6 +58,7 @@ namespace CheckoutKata.Tests
         public Checkout(IDictionary<object, int> prices)
         {
             _prices = prices;
+            Price = 0;
         }
 
         public void Add(object item)
@@ -65,6 +66,6 @@ namespace CheckoutKata.Tests
             Price += _prices[item];
         }
 
-        public int Price { get; set; }
+        public int Price { get; private set; }
     }
 }
