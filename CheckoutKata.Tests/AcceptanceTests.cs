@@ -73,6 +73,18 @@ namespace CheckoutKata.Tests
             Assert.That(_checkout.Total, Is.EqualTo(45));
         }
 
+        [Test]
+        public void AppliesDiscountForBothAAndB()
+        {
+            _checkout.Scan('A');
+            _checkout.Scan('A');
+            _checkout.Scan('B');
+            _checkout.Scan('A');
+            _checkout.Scan('B');
+
+            Assert.That(_checkout.Total, Is.EqualTo(175));
+        }
+
     }
 
     public class Checkout
@@ -91,11 +103,34 @@ namespace CheckoutKata.Tests
 
         public void Scan(object item)
         {
+            IncrementItemCount(item);
+            ApplyPrice(item);
+            ApplyDiscounts();
+        }
+
+        private void ApplyPrice(object item)
+        {
+            Total += _prices[item];
+        }
+
+        private void ApplyDiscounts()
+        {
+            if (_aCount == 3)
+            {
+                Total -= 20;
+                _aCount = 0;
+            }
+            if (_bCount == 2)
+            {
+                Total -= 15;
+                _bCount = 0;
+            }
+        }
+
+        private void IncrementItemCount(object item)
+        {
             if (item.Equals('A')) _aCount += 1;
             if (item.Equals('B')) _bCount += 1;
-            Total += _prices[item];
-            if (_aCount == 3) Total -= 20;
-            if (_bCount == 2) Total -= 15;
         }
 
         public int Total { get; private set; }
