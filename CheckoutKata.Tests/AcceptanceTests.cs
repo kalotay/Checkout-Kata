@@ -25,7 +25,7 @@ namespace CheckoutKata.Tests
         [Test]
         public void GivenNoItemsPriceSHouldBeZero()
         {
-            Assert.That(_checkout.Price, Is.EqualTo(0));
+            Assert.That(_checkout.Total, Is.EqualTo(0));
         }
 
         [TestCase('A', 50)]
@@ -34,9 +34,9 @@ namespace CheckoutKata.Tests
         [TestCase('D', 15)]
         public void GivenOneItemShouldReturnItsPrice(object item, int price)
         {
-            _checkout.Add(item);
+            _checkout.Scan(item);
 
-            Assert.That(_checkout.Price, Is.EqualTo(price));
+            Assert.That(_checkout.Total, Is.EqualTo(price));
         }
 
         [TestCase("AA", 100)]
@@ -48,28 +48,42 @@ namespace CheckoutKata.Tests
         {
             foreach (var item in items)
             {
-                _checkout.Add(item);
+                _checkout.Scan(item);
             }
 
-            Assert.That(_checkout.Price, Is.EqualTo(price));
+            Assert.That(_checkout.Total, Is.EqualTo(price));
+        }
+
+        [Test]
+        public void AppliesDiscount()
+        {
+            _checkout.Scan('A');
+            _checkout.Scan('A');
+            _checkout.Scan('A');
+
+            Assert.That(_checkout.Total, Is.EqualTo(130));
         }
     }
 
     public class Checkout
     {
         private readonly IDictionary<object, int> _prices;
+        private int _aCount;
 
         public Checkout(IDictionary<object, int> prices)
         {
             _prices = prices;
-            Price = 0;
+            Total = 0;
+            _aCount = 0;
         }
 
-        public void Add(object item)
+        public void Scan(object item)
         {
-            Price += _prices[item];
+            if (item.Equals('A')) _aCount += 1;
+            Total += _prices[item];
+            if (_aCount == 3) Total -= 20;
         }
 
-        public int Price { get; private set; }
+        public int Total { get; private set; }
     }
 }
