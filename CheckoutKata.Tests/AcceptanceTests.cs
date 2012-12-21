@@ -42,7 +42,9 @@ namespace CheckoutKata.Tests
         [TestCase("AA", 100)]
         [TestCase("AC", 70)]
         [TestCase("AD", 65)]
-        public void GivenTwoItemsWithoutDiscountReturnTheSumOfPrices(IEnumerable items, int price)
+        [TestCase("ADA", 115)]
+        [TestCase("CCCCC", 100)]
+        public void GivenNItemsWithoutDiscountReturnTheSumOfPrices(IEnumerable items, int price)
         {
             foreach (var item in items)
             {
