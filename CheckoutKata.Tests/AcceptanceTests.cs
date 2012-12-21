@@ -52,10 +52,7 @@ namespace CheckoutKata.Tests
         [TestCase("CCCCC", 100)]
         public void GivenNItemsWithoutDiscountReturnTheSumOfPrices(IEnumerable items, int price)
         {
-            foreach (var item in items)
-            {
-                _checkout.Scan(item);
-            }
+            _checkout.ScanAll(items);
 
             Assert.That(_checkout.Total, Is.EqualTo(price));
         }

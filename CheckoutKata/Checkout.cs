@@ -1,3 +1,5 @@
+using System.Collections;
+
 namespace CheckoutKata
 {
     public class Checkout
@@ -18,5 +20,13 @@ namespace CheckoutKata
         }
 
         public int Total { get { return _priceTotalizer.Total - _discounter.Discount; } }
+
+        public void ScanAll(IEnumerable items)
+        {
+            foreach (var item in items)
+            {
+                Scan(item);
+            }
+        }
     }
 }
