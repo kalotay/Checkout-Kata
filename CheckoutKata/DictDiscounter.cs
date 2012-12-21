@@ -13,10 +13,10 @@ namespace CheckoutKata
         private readonly IDictionary<object, int> _itemCount;
         private readonly IReadOnlyDictionary<object, DiscountSpec> _discountSpecs; 
 
-        public DictDiscounter(IReadOnlyDictionary<object, DiscountSpec> discountSpec)
+        public DictDiscounter(IReadOnlyDictionary<object, DiscountSpec> discountSpecs)
         {
             _itemCount = new Dictionary<object, int>();
-            _discountSpecs = discountSpec;
+            _discountSpecs = discountSpecs;
         }
 
         public int Discount  { get; set; }
