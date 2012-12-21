@@ -112,7 +112,6 @@ namespace CheckoutKata.Tests
             _itemCount = new Dictionary<object, int>();
             _itemQuantityForDiscount = itemQuantityForDiscount;
             _discountAmount = discountAmount;
-            Total = 0;
         }
 
         public void Scan(object item)
@@ -124,8 +123,10 @@ namespace CheckoutKata.Tests
 
         private void ApplyPrice(object item)
         {
-            Total += _prices[item];
+            PriceTotal += _prices[item];
         }
+
+        public int PriceTotal { get; private set; }
 
         private void ApplyDiscounts(object item)
         {
@@ -133,7 +134,7 @@ namespace CheckoutKata.Tests
             
             if (_itemCount[item] == _itemQuantityForDiscount[item])
             {
-                Total -= _discountAmount[item];
+                DiscountTotal += _discountAmount[item];
             }
         }
 
@@ -148,6 +149,8 @@ namespace CheckoutKata.Tests
             _itemCount.Add(item, 1);
         }
 
-        public int Total { get; private set; }
+        public int Total { get { return PriceTotal - DiscountTotal; } }
+
+        protected int DiscountTotal  { get; set; }
     }
 }
