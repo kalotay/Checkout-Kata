@@ -91,5 +91,15 @@ namespace CheckoutKata.Tests
             Assert.That(_checkout.Total, Is.EqualTo(175));
         }
 
+        [Test]
+        public void AppliesDiscountTwice()
+        {
+            _checkout.Scan('B');
+            _checkout.Scan('B');
+            _checkout.Scan('B');
+            _checkout.Scan('B');
+
+            Assert.That(_checkout.Total, Is.EqualTo(90));
+        }
     }
 }

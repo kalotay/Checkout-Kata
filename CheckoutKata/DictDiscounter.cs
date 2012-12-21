@@ -27,7 +27,7 @@ namespace CheckoutKata
 
             var spec = _discountSpecs[item];
             
-            if (_itemCount[item] == spec.ItemQuantity)
+            if ((_itemCount[item] % spec.ItemQuantity) == 0)
             {
                 Discount += spec.DiscountAmount;
             }
