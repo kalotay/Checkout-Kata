@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace CheckoutKata.Tests
 {
@@ -32,13 +33,16 @@ namespace CheckoutKata.Tests
 
     public class Checkout
     {
+        private readonly IDictionary<object,int> _prices = new Dictionary<object, int>
+                                                     {
+                                                         {"A", 50},
+                                                         {"B", 30},
+                                                         {"C", 20},
+                                                     }; 
+
         public void Add(object item)
         {
-            if (item.Equals("A")) Price = 50;
-
-            if (item.Equals("B")) Price = 30;
-
-            if (item.Equals("C")) Price = 20;
+            Price = _prices[item];
         }
 
         public int Price { get; set; }
