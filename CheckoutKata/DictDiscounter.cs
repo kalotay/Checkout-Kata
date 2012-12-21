@@ -5,14 +5,12 @@ namespace CheckoutKata
     public class DictDiscounter : IDiscounter
     {
         private readonly IDictionary<object, int> _itemCount;
-        private readonly IReadOnlyDictionary<object, int> _itemQuantityForDiscount;
-        private readonly IReadOnlyDictionary<object, int> _discountAmount;
+        private readonly IReadOnlyDictionary<object, DiscountSpec> _discountSpecs; 
 
-        public DictDiscounter(IReadOnlyDictionary<object, int> itemQuantityForDiscount, IReadOnlyDictionary<object, int> discountAmount)
+        public DictDiscounter(IReadOnlyDictionary<object, DiscountSpec> discountSpec)
         {
             _itemCount = new Dictionary<object, int>();
-            _itemQuantityForDiscount = itemQuantityForDiscount;
-            _discountAmount = discountAmount;
+            _discountSpecs = discountSpec;
         }
 
         public int Discount  { get; set; }
@@ -25,11 +23,13 @@ namespace CheckoutKata
 
         private void ApplyDiscounts(object item)
         {
-            if (!_itemQuantityForDiscount.ContainsKey(item)) return;
+            if (!_discountSpecs.ContainsKey(item)) return;
+
+            var spec = _discountSpecs[item];
             
-            if (_itemCount[item] == _itemQuantityForDiscount[item])
+            if (_itemCount[item] == spec.ItemQuantity)
             {
-                Discount += _discountAmount[item];
+                Discount += spec.DiscountAmount;
             }
         }
 

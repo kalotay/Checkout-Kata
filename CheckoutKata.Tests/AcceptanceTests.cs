@@ -19,19 +19,13 @@ namespace CheckoutKata.Tests
                                                          {'C', 20},
                                                          {'D', 15},
                                                      };
-            var discounts = new Dictionary<object, int>
+            var discounts = new Dictionary<object, DiscountSpec>
                                 {
-                                    {'A', 20},
-                                    {'B', 15}
+                                    {'A', new DiscountSpec {DiscountAmount = 20, ItemQuantity = 3}},
+                                    {'B', new DiscountSpec {DiscountAmount = 15, ItemQuantity = 2}}
                                 };
 
-            var discountQuantities = new Dictionary<object, int>
-                                         {
-                                             {'A', 3},
-                                             {'B', 2}
-                                         };
-
-            _checkout = new Checkout(new DictPriceTotalizer(prices), new DictDiscounter(discountQuantities, discounts));
+            _checkout = new Checkout(new DictPriceTotalizer(prices), new DictDiscounter(discounts));
         }
 
         [Test]
