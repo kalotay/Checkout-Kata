@@ -108,11 +108,11 @@ namespace CheckoutKata.Tests
             _prices = prices;
         }
 
-        public int PriceTotal { get; set; }
+        public int Total { get; private set; }
 
-        public void ApplyPrice(object item)
+        public void Register(object item)
         {
-            PriceTotal += _prices[item];
+            Total += _prices[item];
         }
     }
 
@@ -134,7 +134,7 @@ namespace CheckoutKata.Tests
         public void Scan(object item)
         {
             IncrementItemCount(item);
-            _priceTotalizer.ApplyPrice(item);
+            _priceTotalizer.Register(item);
             ApplyDiscounts(item);
         }
 
@@ -159,7 +159,7 @@ namespace CheckoutKata.Tests
             _itemCount.Add(item, 1);
         }
 
-        public int Total { get { return _priceTotalizer.PriceTotal - DiscountTotal; } }
+        public int Total { get { return _priceTotalizer.Total - DiscountTotal; } }
 
         protected int DiscountTotal  { get; set; }
     }
