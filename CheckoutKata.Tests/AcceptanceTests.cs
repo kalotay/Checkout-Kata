@@ -11,7 +11,14 @@ namespace CheckoutKata.Tests
         [SetUp]
         public void Setup()
         {
-            _checkout = new Checkout();
+            var prices = new Dictionary<object, int>
+                                                     {
+                                                         {"A", 50},
+                                                         {"B", 30},
+                                                         {"C", 20},
+                                                         {"D", 15},
+                                                     };
+            _checkout = new Checkout(prices);
         }
 
         [Test]
@@ -34,13 +41,12 @@ namespace CheckoutKata.Tests
 
     public class Checkout
     {
-        private readonly IDictionary<object,int> _prices = new Dictionary<object, int>
-                                                     {
-                                                         {"A", 50},
-                                                         {"B", 30},
-                                                         {"C", 20},
-                                                         {"D", 15},
-                                                     }; 
+        private readonly IDictionary<object, int> _prices;
+
+        public Checkout(IDictionary<object, int> prices)
+        {
+            _prices = prices;
+        }
 
         public void Add(object item)
         {
