@@ -31,7 +31,7 @@ namespace CheckoutKata.Tests
                                              {'B', 2}
                                          };
 
-            _checkout = new Checkout(new PriceTotalizer(prices), discounts, discountQuantities);
+            _checkout = new Checkout(new DictPriceTotalizer(prices), discounts, discountQuantities);
         }
 
         [Test]
@@ -99,11 +99,17 @@ namespace CheckoutKata.Tests
 
     }
 
-    public class PriceTotalizer
+    public interface IPriceTotalizer
+    {
+        int Total { get; }
+        void Register(object item);
+    }
+
+    public class DictPriceTotalizer : IPriceTotalizer
     {
         private readonly IReadOnlyDictionary<object, int> _prices;
 
-        public PriceTotalizer(IReadOnlyDictionary<object, int> prices)
+        public DictPriceTotalizer(IReadOnlyDictionary<object, int> prices)
         {
             _prices = prices;
         }
@@ -121,9 +127,9 @@ namespace CheckoutKata.Tests
         private readonly IDictionary<object, int> _itemCount;
         private readonly IReadOnlyDictionary<object, int> _itemQuantityForDiscount;
         private readonly IReadOnlyDictionary<object, int> _discountAmount;
-        private readonly PriceTotalizer _priceTotalizer;
+        private readonly IPriceTotalizer _priceTotalizer;
 
-        public Checkout(PriceTotalizer priceTotalizer, IReadOnlyDictionary<object, int> discountAmount, IReadOnlyDictionary<object, int> itemQuantityForDiscount)
+        public Checkout(IPriceTotalizer priceTotalizer, IReadOnlyDictionary<object, int> discountAmount, IReadOnlyDictionary<object, int> itemQuantityForDiscount)
         {
             _priceTotalizer = priceTotalizer;
             _itemCount = new Dictionary<object, int>();
