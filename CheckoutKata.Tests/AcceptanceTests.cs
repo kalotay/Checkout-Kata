@@ -135,19 +135,25 @@ namespace CheckoutKata.Tests
             _discountAmount = discountAmount;
         }
 
-        public int DiscountTotal  { get; set; }
+        public int Discount  { get; set; }
 
-        public void ApplyDiscounts(object item)
+        public void Register(object item)
+        {
+            IncrementItemCount(item);
+            ApplyDiscounts(item);
+        }
+
+        private void ApplyDiscounts(object item)
         {
             if (!_itemQuantityForDiscount.ContainsKey(item)) return;
             
             if (_itemCount[item] == _itemQuantityForDiscount[item])
             {
-                DiscountTotal += _discountAmount[item];
+                Discount += _discountAmount[item];
             }
         }
 
-        public void IncrementItemCount(object item)
+        private void IncrementItemCount(object item)
         {
             if (_itemCount.ContainsKey(item))
             {
@@ -172,17 +178,16 @@ namespace CheckoutKata.Tests
 
         public void Scan(object item)
         {
-            _discounter.IncrementItemCount(item);
             _priceTotalizer.Register(item);
-            _discounter.ApplyDiscounts(item);
+            _discounter.Register(item);
         }
 
         public int Total { get { return _priceTotalizer.Total - DiscountTotal; } }
 
         protected int DiscountTotal
         {
-            set { _discounter.DiscountTotal = value; }
-            get { return _discounter.DiscountTotal; }
+            set { _discounter.Discount = value; }
+            get { return _discounter.Discount; }
         }
     }
 }
